@@ -1,25 +1,36 @@
+use clap::Parser;
 use futures::StreamExt;
 use genai::Client;
 use genai::chat::{ChatMessage, ChatRequest, ChatStreamEvent};
 use readability::extractor;
 use reqwest::Client as HttpClient;
-use std::env;
 use std::io::Cursor;
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Cli {
+    /// The URL to fetch and summarize
+    url: String,
+
+    /// The prompt to send to the LLM
+    #[arg(
+        short,
+        long,
+        default_value = "Summarize this article in 3 bullet points."
+    )]
+    prompt: String,
+
+    /// The LLM model to use
+    #[arg(short, long, default_value = "gpt-4o")]
+    model: String,
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 1. Get URL from args
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: {} <url> [prompt]", args[0]);
-        return Ok(());
-    }
-    let url = &args[1];
-    let user_prompt = if args.len() > 2 {
-        &args[2]
-    } else {
-        "Summarize this article in 3 bullet points."
-    };
+    let cli = Cli::parse();
+    let url = &cli.url;
+    let user_prompt = &cli.prompt;
 
     println!("Fetching {}", url);
 
@@ -52,7 +63,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Check for API keys to decide default model, or just default to gpt-4o and let it fail if no key.
     // genai supports many providers. Let's try to be smart or just default to OpenAI.
-    let model = "gpt-4o";
+    let model = &cli.model;
 
     println!("Sending to {}...", model);
 
