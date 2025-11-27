@@ -68,6 +68,66 @@ setup-mise:
     mise install
     echo "✅ Tools installed."
 
+    just setup-mise-completions
+
+# Configure shell completions for mise
+[private]
+setup-mise-completions:
+    #!/usr/bin/env bash
+    echo "Configuring mise completions..."
+    SHELL_NAME=$(basename "$SHELL")
+    if [ "$SHELL_NAME" = "zsh" ]; then
+        just setup-mise-zsh
+    elif [ "$SHELL_NAME" = "bash" ]; then
+        just setup-mise-bash
+    elif [ "$SHELL_NAME" = "fish" ]; then
+        just setup-mise-fish
+    else
+        echo "⚠️  Unsupported shell for automatic completion setup: $SHELL_NAME"
+        echo "Please manually configure completions: https://mise.jdx.dev/cli/completion.html"
+    fi
+
+[private]
+setup-mise-zsh:
+    #!/usr/bin/env bash
+    echo "Detected Zsh. Setting up completions..."
+    mkdir -p ~/.zfunc
+    if command -v mise > /dev/null; then
+        mise completion zsh > ~/.zfunc/_mise
+    fi
+
+    # Check if we've already configured zshrc
+    if [ ! -f ~/.zshrc ] || ! grep -q "# mise completions" ~/.zshrc; then
+        echo "Adding ~/.zfunc to fpath in ~/.zshrc..."
+        echo '' >> ~/.zshrc
+        echo '# mise completions' >> ~/.zshrc
+        echo 'fpath=(~/.zfunc $fpath)' >> ~/.zshrc
+        echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+    else
+        echo "zshrc already configured for mise completions."
+    fi
+    echo "✅ Zsh completions configured."
+
+[private]
+setup-mise-bash:
+    #!/usr/bin/env bash
+    echo "Detected Bash. Setting up completions..."
+    mkdir -p ~/.local/share/bash-completion/completions
+    if command -v mise > /dev/null; then
+        mise completion bash > ~/.local/share/bash-completion/completions/mise
+    fi
+    echo "✅ Bash completions configured."
+
+[private]
+setup-mise-fish:
+    #!/usr/bin/env bash
+    echo "Detected Fish. Setting up completions..."
+    mkdir -p ~/.config/fish/completions
+    if command -v mise > /dev/null; then
+        mise completion fish > ~/.config/fish/completions/mise.fish
+    fi
+    echo "✅ Fish completions configured."
+
 # Reset the codebase to a specific git ref (tag, sha, branch)
 # Useful for verifying the 'just setup' onboarding flow by simulating a fresh clone.
 
@@ -351,6 +411,24 @@ setup-cargo-tools:
         fi
     else
         echo "✅ 'cargo-deny' is installed."
+    fi
+
+    # Check for usage (required for mise completions)
+    if ! command -v usage > /dev/null; then
+        echo "🛠️ 'usage' CLI not found. It is required for mise completions."
+        read -p "Would you like to install usage now? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if cargo binstall --help > /dev/null 2>&1; then
+                echo "Installing usage-cli via cargo-binstall..."
+                cargo binstall usage-cli -y
+            else
+                echo "Installing usage-cli via cargo (this may take a while)..."
+                cargo install usage-cli
+            fi
+        fi
+    else
+        echo "✅ 'usage' CLI is installed."
     fi
 
 # Setup Node.js environment
