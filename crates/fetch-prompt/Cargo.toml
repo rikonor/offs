@@ -1,7 +1,10 @@
 [package]
-edition = "2021"
-license = "MIT"
+authors.workspace = true
+description.workspace = true
+edition.workspace = true
+license.workspace = true
 name = "fetch-prompt"
+repository.workspace = true
 version = "0.1.0"
 
 [lints]

@@ -2,6 +2,13 @@
 members = ["crates/*"]
 resolver = "2"
 
+[workspace.package]
+authors = ["The offs Contributors"]
+description = "A Rust workspace for web-based LLM interactions."
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/rikonor/offs"
+
 [workspace.lints.rust]
 missing_debug_implementations = "warn"
 missing_docs = "warn"
