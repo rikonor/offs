@@ -1,7 +1,7 @@
 {
   "recommendations": [
     "redhat.vscode-yaml",
-    "cschleiden.vscode-github-actions",
+    "github.vscode-github-actions",
     "rust-lang.rust-analyzer",
     "tamasfe.even-better-toml",
     "serayuzgur.crates"

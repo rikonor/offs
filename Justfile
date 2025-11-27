@@ -18,7 +18,7 @@ pre-commit:
     pre-commit run --all-files
 
 # Setup development environment
-setup: setup-git-user setup-hooks setup-gpg setup-ai-context setup-cargo-tools
+setup: setup-git-user setup-hooks setup-gpg setup-ai-context setup-cargo-tools setup-vscode-extensions
     #!/usr/bin/env bash
     echo "Setup complete! Development environment is ready."
     echo ""
@@ -234,6 +234,11 @@ unset-gpg:
 [private]
 setup-ai-context:
     ./scripts/setup-ai-context.sh
+
+# Check and install VS Code extensions (if running in VS Code)
+[private]
+setup-vscode-extensions:
+    ./scripts/setup-vscode-extensions.sh
 
 # Install cargo tools (binstall, deny)
 [private]

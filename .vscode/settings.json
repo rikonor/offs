@@ -1,5 +1,8 @@
 {
   "files.associations": {
     ".roomodes": "yaml"
+  },
+  "yaml.schemas": {
+    "https://www.schemastore.org/roomodes.json": ".roomodes"
   }
 }
