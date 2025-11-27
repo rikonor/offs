@@ -19,6 +19,6 @@ brace_style = "SameLineWhere"
 # To use these, you must run `cargo +nightly fmt`
 # Uncomment the lines below to enable strict import sorting and merging
 
-unstable_features = true
-imports_granularity = "Crate"      # Merges imports: use std::{fs, io};
 group_imports = "StdExternalCrate" # Groups: std, external crates, this crate
+imports_granularity = "Crate"      # Merges imports: use std::{fs, io};
+unstable_features = true

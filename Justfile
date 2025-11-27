@@ -13,8 +13,12 @@ check-hooks:
         echo "⚠️  Pre-commit hooks not detected. Run 'just setup' to configure them."; \
     fi
 
+# Run pre-commit hooks on all files
+pre-commit:
+    pre-commit run --all-files
+
 # Setup development environment
-setup: setup-git-user setup-hooks setup-gpg setup-ai-context
+setup: setup-git-user setup-hooks setup-gpg setup-ai-context setup-cargo-tools
     #!/usr/bin/env bash
     echo "Setup complete! Development environment is ready."
     echo ""
@@ -188,17 +192,73 @@ unset-gpg:
 [private]
 setup-ai-context:
     ./scripts/setup-ai-context.sh
+
+# Install cargo tools (binstall, deny)
+[private]
+setup-cargo-tools:
+    #!/usr/bin/env bash
+    echo "Checking cargo tools..."
+
+    # Check for cargo
+    if ! command -v cargo > /dev/null; then
+        echo "❌ 'cargo' not found. Please install Rust: https://rustup.rs/"
+        exit 1
+    fi
+
+    # Check for cargo-binstall
+    if ! cargo binstall --help > /dev/null 2>&1; then
+        echo "📦 'cargo-binstall' not found. It is recommended for fast binary installations."
+        read -p "Would you like to install cargo-binstall now? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            # Try to install via curl script for speed, fallback to cargo install
+            if command -v curl > /dev/null; then
+                echo "Installing cargo-binstall via curl..."
+                curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+            else
+                echo "curl not found. Installing via cargo (this may take a while)..."
+                cargo install cargo-binstall
+            fi
+        else
+            echo "Skipping cargo-binstall. Note: Installing tools might be slower."
+        fi
+    else
+        echo "✅ 'cargo-binstall' is installed."
+    fi
+
+    # Check for cargo-deny
+    if ! cargo deny --help > /dev/null 2>&1; then
+        echo "🛡️ 'cargo-deny' not found. It is required for dependency verification."
+        read -p "Would you like to install cargo-deny now? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if cargo binstall --help > /dev/null 2>&1; then
+                echo "Installing cargo-deny via cargo-binstall..."
+                cargo binstall cargo-deny -y
+            else
+                echo "Installing cargo-deny via cargo (this may take a while)..."
+                cargo install --locked cargo-deny
+            fi
+        fi
+    else
+        echo "✅ 'cargo-deny' is installed."
+    fi
+
 # Generate llms.txt context file (use --commit to auto-commit changes)
 generate-context *args:
-    ./scripts/generate-llms-txt.sh {{args}}
+    ./scripts/generate-llms-txt.sh {{ args }}
 
 # Build the project
+
 alias b := build
+
 build: check-hooks
     cargo build
 
 # Run tests
+
 alias t := test
+
 test: check-hooks
     cargo test
 
@@ -215,14 +275,18 @@ lint:
     cargo clippy --all-targets --all-features -- -D warnings
 
 # Run all checks (fmt, lint, test)
+
 alias c := check
+
 check: check-hooks fmt-check lint test
 
 # Run the application
 # Example: just run https://example.com --model gpt-4
+
 alias r := run
+
 run +args: check-hooks
-    cargo run -- {{args}}
+    cargo run -- {{ args }}
 
 # Clean build artifacts
 clean:
