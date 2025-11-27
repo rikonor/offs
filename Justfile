@@ -6,14 +6,38 @@ set dotenv-load := true
 default:
     @just --list
 
+# Check if pre-commit hooks are installed (internal)
+[private]
+check-hooks:
+    @if [ ! -f .git/hooks/pre-commit ]; then \
+        echo "⚠️  Pre-commit hooks not detected. Run 'just setup' to configure them."; \
+    fi
+
+# Setup development environment
+setup:
+    #!/usr/bin/env bash
+    echo "Setting up development environment..."
+    if ! command -v pre-commit > /dev/null; then
+        echo "pre-commit not found. Attempting to install..."
+        if command -v brew > /dev/null; then
+            echo "Installing via Homebrew..."
+            brew install pre-commit
+        else
+            echo "Installing via pip..."
+            pip install pre-commit
+        fi
+    fi
+    pre-commit install
+    echo "Setup complete! Pre-commit hooks are installed."
+
 # Build the project
 alias b := build
-build:
+build: check-hooks
     cargo build
 
 # Run tests
 alias t := test
-test:
+test: check-hooks
     cargo test
 
 # Check formatting
@@ -30,12 +54,12 @@ lint:
 
 # Run all checks (fmt, lint, test)
 alias c := check
-check: fmt-check lint test
+check: check-hooks fmt-check lint test
 
 # Run the application
 # Example: just run https://example.com --model gpt-4
 alias r := run
-run +args:
+run +args: check-hooks
     cargo run -- {{args}}
 
 # Clean build artifacts
