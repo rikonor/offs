@@ -2,26 +2,33 @@
 
 > A Rust workspace for web-based LLM interactions.
 
-## Project Overview
+find an llm crate for Rust
 
-This project is a Rust workspace designed to facilitate interactions with Large Language Models (LLMs) in a web context. It is structured as a workspace containing multiple crates.
+## Project Structure
 
-## Key Features
+This project is a Rust workspace containing the following crates:
 
-- **Rust Workspace:** Modular design using Cargo workspace.
-- **Development Tools:** Uses `just` for task automation and `pre-commit` for code quality.
-- **CI/CD:** GitHub Actions for continuous integration.
+- **fetch-prompt** (`crates/fetch-prompt`): No description provided.
 
-## Documentation
+## Development Commands
 
-- **README.md:** General project information and setup instructions.
-- **Justfile:** Command reference for development tasks.
-- **Cargo.toml:** Workspace configuration and dependencies.
+Use `just` to run the following commands:
 
-## Usage
+- `just default`: List available recipes
+- `just setup`: Setup development environment
+- `just verify-signing`: Verify commit signing works
+- `just unset-gpg`: Disable GPG signing (revert)
+- `just fmt-check`: Check formatting
+- `just fmt`: Format code
+- `just lint`: Lint with Clippy
+- `just clean`: Clean build artifacts
+- `just doc`: Generate documentation
+- `just watch`: Watch for changes and run check
 
-To get started with development:
+## Coding Standards (Strict)
 
-1.  Run `just setup` to initialize the environment.
-2.  Use `just build` to compile the project.
-3.  Use `just test` to run tests.
+- **Language:** Rust (2021 edition)
+- **Formatting:** `cargo fmt` (checked in CI)
+- **Linting:** `cargo clippy -- -D warnings` (NO warnings allowed)
+- **Error Handling:** Use `thiserror` (libs) / `anyhow` (apps). No `unwrap()`.
+- **Testing:** Unit tests required for new features.
