@@ -1,4 +1,4 @@
-# AI Agent Guidelines (AGENT.md)
+# AI Agent Guidelines (AGENTS.md) - STRICT MODE
 
 ## Project Overview
 
@@ -10,12 +10,14 @@ This is a Rust workspace for `webllm`.
 -   `Justfile`: Command runner for setup and maintenance.
 -   `.github/`: CI/CD workflows.
 
-## Coding Standards
+## Coding Standards (STRICT)
 
 -   **Language:** Rust (2021 edition).
 -   **Formatting:** Run `cargo fmt` on all changes.
--   **Linting:** Code must pass `cargo clippy`.
--   **Error Handling:** Prefer `thiserror` for libraries and `anyhow` for applications.
+-   **Linting:** Code must pass `cargo clippy -- -D warnings`. NO WARNINGS ALLOWED.
+-   **Documentation:** All public items MUST have documentation comments.
+-   **Tests:** All new features MUST include unit tests.
+-   **Error Handling:** Prefer `thiserror` for libraries and `anyhow` for applications. `unwrap()` is FORBIDDEN in production code.
 -   **Async:** Use `tokio` runtime where applicable.
 
 ## Development Workflow
