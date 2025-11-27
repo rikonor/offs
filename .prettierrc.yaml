@@ -1,0 +1,15 @@
+# Prettier configuration
+# Note: Prettier also respects .editorconfig, but these settings take precedence.
+
+# Default formatting (JSON, YAML, JS, etc.)
+tabWidth: 2
+useTabs: false
+singleQuote: false
+printWidth: 80
+proseWrap: "always" # Wrap markdown text at printWidth
+
+overrides:
+  # Markdown files use 4 spaces indentation (matching .editorconfig [*])
+  - files: "*.md"
+    options:
+      tabWidth: 4

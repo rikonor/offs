@@ -1,0 +1,17 @@
+# Ignore artifacts:
+target/
+debug/
+dist/
+node_modules/
+
+# Ignore generated files
+**/*.rs.bk
+*.pdb
+*.swp
+.DS_Store
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore specific large or auto-generated files if any
+Cargo.lock

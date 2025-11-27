@@ -9,8 +9,8 @@ use anyhow::Error;
 use clap::Parser;
 use futures::StreamExt;
 use genai::{
-    Client,
     chat::{ChatMessage, ChatRequest, ChatStreamEvent},
+    Client,
 };
 use readability::extractor;
 use reqwest::Client as HttpClient;

@@ -15,11 +15,13 @@ This is a Rust workspace for `webllm`.
 -   **Language:** Rust (2021 edition).
 -   **Formatting:** Run `cargo fmt` on all changes.
 -   **Linting:** Code must pass `cargo clippy`.
--   **Error Handling:** Prefer `thiserror` for libraries and `anyhow` for applications.
+-   **Error Handling:** Prefer `thiserror` for libraries and `anyhow` for
+    applications.
 -   **Async:** Use `tokio` runtime where applicable.
 
 ## Development Workflow
 
 1. **Setup:** Run `just setup` to install hooks.
 2. **Testing:** Run `cargo test` for all crates.
-3. **Commits:** Follow [Conventional Commits](https://www.conventionalcommits.org/).
+3. **Commits:** Follow
+   [Conventional Commits](https://www.conventionalcommits.org/).

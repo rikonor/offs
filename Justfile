@@ -322,6 +322,28 @@ alias c := check
 
 check: check-hooks fmt-check lint test
 
+# List duplicate dependencies in the dependency graph
+list-duplicates:
+    #!/usr/bin/env bash
+    echo "🔍 Scanning for duplicate dependencies..."
+    echo ""
+
+    # Get list of duplicates
+    DUPLICATES=$(cargo tree -d --depth 0 | cut -d' ' -f1 | sort | uniq | grep -v "\[build-dependencies\]" | grep -v "^$")
+
+    if [ -z "$DUPLICATES" ]; then
+        echo "✅ No duplicate dependencies found!"
+        exit 0
+    fi
+
+    echo "⚠️  Found the following duplicate crates:"
+    echo "$DUPLICATES" | sed 's/^/  - /'
+    echo ""
+    echo "💡 To investigate a specific crate, run:"
+    echo "   cargo tree -d -i -p <crate_name>"
+    echo ""
+    echo "   Example: cargo tree -d -i -p reqwest"
+
 # Run the application
 # Example: just run https://example.com --model gpt-4
 

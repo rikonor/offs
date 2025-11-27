@@ -8,11 +8,13 @@ To set up the development environment, including pre-commit hooks, run:
 just setup
 ```
 
-This will install `pre-commit` (if not already installed) and configure the git hooks.
+This will install `pre-commit` (if not already installed) and configure the git
+hooks.
 
 ### Resetting the Environment
 
-If you need to reset your local environment to a clean state (simulating a fresh clone), you can use:
+If you need to reset your local environment to a clean state (simulating a fresh
+clone), you can use:
 
 ```bash
 # Reset to main branch
@@ -22,8 +24,10 @@ just reset
 just reset v1.0.0
 ```
 
-**Warning:** This is a destructive action that will discard all uncommitted changes and untracked files.
+**Warning:** This is a destructive action that will discard all uncommitted
+changes and untracked files.
 
 ## Contributing
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
+We follow [Conventional Commits](https://www.conventionalcommits.org/) for
+commit messages.
