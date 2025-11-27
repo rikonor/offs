@@ -10,8 +10,5 @@ node_modules/
 *.swp
 .DS_Store
 
-# Ignore VS Code settings
-.vscode/
-
 # Ignore specific large or auto-generated files if any
 Cargo.lock

@@ -21,3 +21,5 @@ customModes:
         - If there are modified files, ask if the user wants to stage them.
         - If there are no changes at all, use `switch_mode` to return to "code"
       mode.
+
+      4. Always explain what you are doing, before you do it.
