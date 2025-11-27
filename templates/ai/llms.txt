@@ -1,0 +1,27 @@
+# webllm
+
+> A Rust workspace for web-based LLM interactions.
+
+## Project Overview
+
+This project is a Rust workspace designed to facilitate interactions with Large Language Models (LLMs) in a web context. It is structured as a workspace containing multiple crates.
+
+## Key Features
+
+- **Rust Workspace:** Modular design using Cargo workspace.
+- **Development Tools:** Uses `just` for task automation and `pre-commit` for code quality.
+- **CI/CD:** GitHub Actions for continuous integration.
+
+## Documentation
+
+- **README.md:** General project information and setup instructions.
+- **Justfile:** Command reference for development tasks.
+- **Cargo.toml:** Workspace configuration and dependencies.
+
+## Usage
+
+To get started with development:
+
+1.  Run `just setup` to initialize the environment.
+2.  Use `just build` to compile the project.
+3.  Use `just test` to run tests.

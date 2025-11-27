@@ -14,7 +14,7 @@ check-hooks:
     fi
 
 # Setup development environment
-setup: setup-git-user setup-hooks setup-gpg
+setup: setup-git-user setup-hooks setup-gpg setup-ai-context
     #!/usr/bin/env bash
     echo "Setup complete! Development environment is ready."
     echo ""
@@ -183,6 +183,11 @@ unset-gpg:
     git config --unset commit.gpgsign
     echo "✅ Disabled commit signing (git config --unset commit.gpgsign)"
     echo "Note: Your signing key configuration (user.signingkey) has been preserved."
+
+# Setup AI context files
+[private]
+setup-ai-context:
+    ./scripts/setup-ai-context.sh
 
 # Build the project
 alias b := build
