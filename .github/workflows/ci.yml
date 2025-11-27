@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: yaml-lint
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -29,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - uses: crate-ci/typos@master
 
   semver:
@@ -36,8 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@nightly
+
       - name: Check semver
         uses: obi1kenobi/cargo-semver-checks-action@v2
 
@@ -47,6 +57,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@nightly

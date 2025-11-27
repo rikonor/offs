@@ -1,4 +1,7 @@
 repos:
+  # ============================================================================
+  # General & Formatting
+  # ============================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -11,32 +14,21 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        types_or: [markdown, json]
-
-  - repo: https://github.com/instrumentl/pre-commit-just
-    rev: v0.1
-    hooks:
-      - id: format-justfile
+        types_or: [markdown, json, yaml]
 
   - repo: https://github.com/crate-ci/typos
     rev: v1.19.0
     hooks:
       - id: typos
 
-  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: v9.13.0
+  - repo: https://github.com/instrumentl/pre-commit-just
+    rev: v0.1
     hooks:
-      - id: commitlint
-        stages: [commit-msg]
-        additional_dependencies: ["@commitlint/config-conventional"]
+      - id: format-justfile
 
-  - repo: https://github.com/doublify/pre-commit-rust
-    rev: v1.0
-    hooks:
-      - id: fmt
-      - id: cargo-check
-      - id: clippy
-
+  # ============================================================================
+  # Rust & Cargo
+  # ============================================================================
   - repo: https://github.com/ComPWA/taplo-pre-commit
     rev: v0.9.3
     hooks:
@@ -50,6 +42,29 @@ repos:
         args: ["check", "advisories", "bans", "licenses", "sources"]
         verbose: false
 
+  - repo: local
+    hooks:
+      - id: fmt
+        name: Just fmt
+        entry: just fmt
+        language: system
+        pass_filenames: false
+
+      - id: lint
+        name: Just lint
+        entry: just lint
+        language: system
+        pass_filenames: false
+
+      - id: test
+        name: Just test
+        entry: just test
+        language: system
+        pass_filenames: false
+
+  # ============================================================================
+  # Security & CI
+  # ============================================================================
   - repo: https://github.com/woodruffw/zizmor-pre-commit
     rev: v1.0.0
     hooks:
@@ -69,3 +84,13 @@ repos:
           bash -c 'if ! git verify-commit HEAD >/dev/null 2>&1; then echo "❌ Error: The latest commit is NOT signed! Please amend it with signing enabled: git commit --amend --no-edit -S"; exit 1; fi'
         language: system
         stages: [post-commit]
+
+  # ============================================================================
+  # Commit Messages
+  # ============================================================================
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.13.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ["@commitlint/config-conventional"]
