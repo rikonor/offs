@@ -1,0 +1,24 @@
+# rustfmt.toml
+# See https://rust-lang.github.io/rustfmt/Configurations.html for all options
+
+# --- Stable Options ---
+
+# Maximum line length (default is 100)
+max_width = 100
+
+# Use tab spaces (default is 4)
+tab_spaces = 4
+
+# Newline style (Windows/Unix)
+newline_style = "Auto"
+
+# Brace style (SameLineWhere is standard Rust style)
+brace_style = "SameLineWhere"
+
+# --- Unstable Options (Requires Nightly) ---
+# To use these, you must run `cargo +nightly fmt`
+# Uncomment the lines below to enable strict import sorting and merging
+
+unstable_features = true
+imports_granularity = "Crate"      # Merges imports: use std::{fs, io};
+group_imports = "StdExternalCrate" # Groups: std, external crates, this crate

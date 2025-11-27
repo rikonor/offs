@@ -3,8 +3,7 @@
 //! This tool fetches a webpage, extracts its content using readability,
 //! and then sends a prompt to an LLM to process the content.
 
-use std::io::Cursor;
-use std::io::Write;
+use std::io::{Cursor, Write};
 
 use anyhow::Error;
 use clap::Parser;
