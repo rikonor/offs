@@ -1,4 +1,10 @@
+//! Fetch Prompt CLI tool.
+//!
+//! This tool fetches a webpage, extracts its content using readability,
+//! and then sends a prompt to an LLM to process the content.
+
 use std::io::Cursor;
+use std::io::Write;
 
 use anyhow::Error;
 use clap::Parser;
@@ -36,7 +42,7 @@ async fn main() -> Result<(), Error> {
     let url = &cli.url;
     let user_prompt = &cli.prompt;
 
-    println!("Fetching {}", url);
+    println!("Fetching {url}");
 
     // 2. Fetch URL
     let http_client = HttpClient::new();
@@ -69,7 +75,7 @@ async fn main() -> Result<(), Error> {
     // genai supports many providers. Let's try to be smart or just default to OpenAI.
     let model = &cli.model;
 
-    println!("Sending to {}...", model);
+    println!("Sending to {model}...");
 
     let chat_req = ChatRequest::new(vec![ChatMessage::user(full_prompt)]);
 
@@ -80,14 +86,13 @@ async fn main() -> Result<(), Error> {
         match chunk_res {
             Ok(ChatStreamEvent::Chunk(chunk)) => {
                 print!("{}", chunk.content);
-                use std::io::Write;
                 std::io::stdout().flush()?;
             }
             Ok(_) => {
                 // Ignore other events
             }
             Err(e) => {
-                eprintln!("Error streaming response: {}", e);
+                eprintln!("Error streaming response: {e}");
             }
         }
     }
