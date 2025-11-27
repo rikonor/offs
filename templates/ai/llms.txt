@@ -1,4 +1,4 @@
-# webllm
+# offs
 
 > A Rust workspace for web-based LLM interactions.
 

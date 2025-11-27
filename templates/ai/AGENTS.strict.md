@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a Rust workspace for `webllm`.
+This is a Rust workspace for `offs`.
 
 ## Project Structure
 

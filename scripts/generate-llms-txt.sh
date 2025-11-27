@@ -17,7 +17,7 @@ done
 echo "🤖 Generating $OUTPUT_FILE..."
 
 # 1. Header & Project Info
-echo "# webllm" > "$OUTPUT_FILE"
+echo "# offs" > "$OUTPUT_FILE"
 echo "" >> "$OUTPUT_FILE"
 echo "> A Rust workspace for web-based LLM interactions." >> "$OUTPUT_FILE"
 echo "" >> "$OUTPUT_FILE"

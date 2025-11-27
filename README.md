@@ -1,4 +1,6 @@
-find an llm crate for Rust
+# offs
+
+> Oh For Fucks Sake - A Rust workspace for web-based LLM interactions.
 
 ## Development Setup
 
