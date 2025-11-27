@@ -5,7 +5,6 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
-      - id: check-toml
       - id: check-added-large-files
 
   - repo: https://github.com/crate-ci/typos
@@ -26,3 +25,35 @@ repos:
       - id: fmt
       - id: cargo-check
       - id: clippy
+
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+        args: ["--option", "reorder_keys=true"]
+
+  - repo: https://github.com/EmbarkStudios/cargo-deny
+    rev: 0.16.1
+    hooks:
+      - id: cargo-deny
+        args: ["check", "advisories", "bans", "licenses", "sources"]
+
+  - repo: https://github.com/woodruffw/zizmor-pre-commit
+    rev: v1.0.0
+    hooks:
+      - id: zizmor
+
+  - repo: local
+    hooks:
+      - id: check-gpg-sign
+        name: Check for GPG Signing
+        entry: |
+          bash -c 'if [[ "$(git config --get commit.gpgsign)" != "true" ]]; then echo "Error: commit.gpgsign is not set to true. Please run: git config commit.gpgsign true"; exit 1; fi'
+        language: system
+
+      - id: verify-commit-signature
+        name: Verify Commit Signature
+        entry: |
+          bash -c 'if ! git verify-commit HEAD >/dev/null 2>&1; then echo "❌ Error: The latest commit is NOT signed! Please amend it with signing enabled: git commit --amend --no-edit -S"; exit 1; fi'
+        language: system
+        stages: [post-commit]
