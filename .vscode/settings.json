@@ -4,5 +4,8 @@
   },
   "yaml.schemas": {
     "https://www.schemastore.org/roomodes.json": ".roomodes"
+  },
+  "evenBetterToml.schema.associations": {
+    "https://mise.jdx.dev/schema/mise.json": ".mise.toml"
   }
 }
