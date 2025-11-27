@@ -16,7 +16,7 @@ confidence-threshold = 0.8
 [bans]
 highlight = "simplest-path"
 multiple-versions = "warn"
-wildcards = "allow"
+wildcards = "deny"
 
 [sources]
 allow-git = []
