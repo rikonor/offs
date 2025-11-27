@@ -30,6 +30,48 @@ setup: setup-git-user setup-hooks setup-gpg setup-ai-context setup-cargo-tools
         echo "Okay, you can run 'just verify-signing' later if you want to test it."
     fi
 
+# Reset the codebase to a specific git ref (tag, sha, branch)
+# Useful for verifying the 'just setup' onboarding flow by simulating a fresh clone.
+
+# WARNING: This will discard uncommitted changes!
+reset ref="main":
+    #!/usr/bin/env bash
+    TARGET="{{ ref }}"
+
+    echo "⚠️  DANGER: You are about to reset the codebase to '$TARGET'."
+    echo "This action will:"
+    echo "  1. Discard ALL uncommitted changes"
+    echo "  2. Delete ALL untracked files (excluding ignored files like 'target/')"
+    echo "  3. Switch to '$TARGET'"
+    echo ""
+    read -p "Are you sure you want to proceed? (y/N) " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Aborted."
+        exit 1
+    fi
+
+    echo "🔄 Fetching updates..."
+    git fetch --all --tags
+
+    echo "🔄 Checking out '$TARGET'..."
+    # Use force checkout to discard local changes to tracked files
+    if ! git checkout -f "$TARGET"; then
+        echo "❌ Failed to checkout '$TARGET'. Please check if the ref exists."
+        exit 1
+    fi
+
+    echo "🗑️  Discarding changes..."
+    # Reset hard to ensure index and working tree match the target exactly
+    git reset --hard "$TARGET"
+
+    echo "🧹 Cleaning untracked files..."
+    # -f: force, -d: directories. Does NOT remove ignored files (to preserve target/ cache)
+    git clean -fd
+
+    echo "✅ Success! Codebase is now at '$TARGET' state."
+    echo "Run 'just setup' if you need to re-initialize the development environment."
+
 # Verify commit signing works
 verify-signing:
     #!/usr/bin/env bash
