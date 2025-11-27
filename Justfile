@@ -188,6 +188,9 @@ unset-gpg:
 [private]
 setup-ai-context:
     ./scripts/setup-ai-context.sh
+# Generate llms.txt context file (use --commit to auto-commit changes)
+generate-context *args:
+    ./scripts/generate-llms-txt.sh {{args}}
 
 # Build the project
 alias b := build
