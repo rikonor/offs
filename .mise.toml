@@ -1,0 +1,5 @@
+[tools]
+github-cli = "2.62.0"
+node = "24.11.1"
+pre-commit = "4.3.0"
+rust = "1.91.1"

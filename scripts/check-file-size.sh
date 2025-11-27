@@ -2,7 +2,7 @@
 set -e
 
 # Default threshold
-THRESHOLD=500
+THRESHOLD=300
 
 # Parse arguments
 FILES=()

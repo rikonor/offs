@@ -35,7 +35,7 @@ report-issue:
     gh issue create --assignee "@me"
 
 # Setup development environment
-setup: setup-git-user setup-hooks setup-gpg setup-gh setup-ai-context setup-cargo-tools setup-vscode-extensions
+setup: setup-mise setup-git-user setup-hooks setup-gpg setup-gh setup-ai-context setup-cargo-tools setup-node setup-vscode-extensions
     #!/usr/bin/env bash
     echo "Setup complete! Development environment is ready."
     echo ""
@@ -46,6 +46,27 @@ setup: setup-git-user setup-hooks setup-gpg setup-gh setup-ai-context setup-carg
     else
         echo "Okay, you can run 'just verify-signing' later if you want to test it."
     fi
+
+# Install and configure mise (tool version manager)
+[private]
+setup-mise:
+    #!/usr/bin/env bash
+    echo "Checking mise..."
+    if ! command -v mise > /dev/null; then
+        echo "mise not found. Installing..."
+        curl https://mise.run | sh
+        echo "✅ mise installed."
+        echo "Please restart your shell or add mise to your path manually if needed."
+    else
+        echo "✅ mise is installed."
+    fi
+
+    echo "Trusting mise config..."
+    mise trust -y
+
+    echo "Installing tools via mise..."
+    mise install
+    echo "✅ Tools installed."
 
 # Reset the codebase to a specific git ref (tag, sha, branch)
 # Useful for verifying the 'just setup' onboarding flow by simulating a fresh clone.
@@ -145,14 +166,9 @@ setup-hooks:
     #!/usr/bin/env bash
     echo "Configuring pre-commit hooks..."
     if ! command -v pre-commit > /dev/null; then
-        echo "pre-commit not found. Attempting to install..."
-        if command -v brew > /dev/null; then
-            echo "Installing via Homebrew..."
-            brew install pre-commit
-        else
-            echo "Installing via pip..."
-            pip install pre-commit
-        fi
+        echo "❌ 'pre-commit' not found."
+        echo "It should have been installed by mise. Please run 'just setup-mise' or 'mise install'."
+        exit 1
     fi
     pre-commit install
     pre-commit install --hook-type commit-msg
@@ -253,24 +269,11 @@ setup-gh:
     #!/usr/bin/env bash
     echo "Checking GitHub CLI (gh)..."
     if ! command -v gh > /dev/null; then
-        echo "GitHub CLI not found."
-        read -p "Would you like to install GitHub CLI? (y/n) " -n 1 -r
-        echo ""
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            if command -v brew > /dev/null; then
-                echo "Installing via Homebrew..."
-                brew install gh
-            else
-                echo "Homebrew not found. Please install 'gh' manually: https://cli.github.com/"
-                # Don't exit with error, just continue
-            fi
-        else
-            echo "Skipping GitHub CLI installation. Some features (like 'just report-issue') will be unavailable."
-            # Don't exit with error, just continue
-        fi
-    else
-        echo "✅ GitHub CLI is installed."
+        echo "❌ 'gh' (GitHub CLI) not found."
+        echo "It should have been installed by mise. Please run 'just setup-mise' or 'mise install'."
+        exit 1
     fi
+    echo "✅ GitHub CLI is installed."
 
     # Check authentication if gh is installed
     if command -v gh > /dev/null; then
@@ -304,9 +307,10 @@ setup-cargo-tools:
     #!/usr/bin/env bash
     echo "Checking cargo tools..."
 
-    # Check for cargo
+    # Check for cargo (managed by mise)
     if ! command -v cargo > /dev/null; then
-        echo "❌ 'cargo' not found. Please install Rust: https://rustup.rs/"
+        echo "❌ 'cargo' not found."
+        echo "It should have been installed by mise (via rustup). Please run 'just setup-mise' or 'mise install'."
         exit 1
     fi
 
@@ -347,6 +351,23 @@ setup-cargo-tools:
         fi
     else
         echo "✅ 'cargo-deny' is installed."
+    fi
+
+# Setup Node.js environment
+[private]
+setup-node:
+    #!/usr/bin/env bash
+    echo "Checking Node.js environment..."
+    if ! command -v npm > /dev/null; then
+        echo "❌ 'npm' not found."
+        echo "It should have been installed by mise (via node). Please run 'just setup-mise' or 'mise install'."
+        exit 1
+    fi
+
+    echo "✅ npm is installed."
+    if [ -f "package.json" ]; then
+        echo "Installing Node.js dependencies..."
+        npm install
     fi
 
 # Generate llms.txt context file (use --commit to auto-commit changes)
@@ -426,3 +447,7 @@ doc:
 # Watch for changes and run check
 watch:
     cargo watch -x check
+
+# Manage changesets
+changeset *args:
+    npx changeset {{ args }}

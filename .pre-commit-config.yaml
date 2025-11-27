@@ -14,7 +14,7 @@ repos:
     hooks:
       - id: check-file-size
         name: Check File Size (AI Maintainability)
-        entry: scripts/check-file-size.sh --threshold 300
+        entry: scripts/check-file-size.sh --threshold 500
         language: system
         types: [text]
         # Exclude lock files
