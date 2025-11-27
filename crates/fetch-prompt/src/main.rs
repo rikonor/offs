@@ -1,10 +1,14 @@
+use std::io::Cursor;
+
+use anyhow::Error;
 use clap::Parser;
 use futures::StreamExt;
-use genai::Client;
-use genai::chat::{ChatMessage, ChatRequest, ChatStreamEvent};
+use genai::{
+    Client,
+    chat::{ChatMessage, ChatRequest, ChatStreamEvent},
+};
 use readability::extractor;
 use reqwest::Client as HttpClient;
-use std::io::Cursor;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -26,7 +30,7 @@ struct Cli {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Error> {
     // 1. Get URL from args
     let cli = Cli::parse();
     let url = &cli.url;
