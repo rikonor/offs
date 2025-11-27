@@ -15,8 +15,16 @@ check-hooks:
 
 # Setup development environment
 setup: setup-git-user setup-hooks setup-gpg
-    @echo "Setup complete! Development environment is ready."
-    @echo "Run 'just verify-signing' to test your commit signing configuration."
+    #!/usr/bin/env bash
+    echo "Setup complete! Development environment is ready."
+    echo ""
+    read -p "Would you like to verify your signing configuration now? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        just verify-signing
+    else
+        echo "Okay, you can run 'just verify-signing' later if you want to test it."
+    fi
 
 # Verify commit signing works
 verify-signing:
