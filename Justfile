@@ -17,8 +17,25 @@ check-hooks:
 pre-commit:
     pre-commit run --all-files
 
+# Report an issue to the repository
+report-issue:
+    #!/usr/bin/env bash
+    if ! command -v gh > /dev/null; then
+        echo "❌ GitHub CLI (gh) is not installed. Please run 'just setup' or install it manually."
+        exit 1
+    fi
+
+    if ! gh auth status >/dev/null 2>&1; then
+        echo "❌ You are not logged into GitHub CLI. Please run 'gh auth login'."
+        exit 1
+    fi
+
+    echo "🚀 Reporting a new issue..."
+    # Interactive mode by default
+    gh issue create --assignee "@me"
+
 # Setup development environment
-setup: setup-git-user setup-hooks setup-gpg setup-ai-context setup-cargo-tools setup-vscode-extensions
+setup: setup-git-user setup-hooks setup-gpg setup-gh setup-ai-context setup-cargo-tools setup-vscode-extensions
     #!/usr/bin/env bash
     echo "Setup complete! Development environment is ready."
     echo ""
@@ -229,6 +246,47 @@ unset-gpg:
     git config --unset commit.gpgsign
     echo "✅ Disabled commit signing (git config --unset commit.gpgsign)"
     echo "Note: Your signing key configuration (user.signingkey) has been preserved."
+
+# Setup GitHub CLI
+[private]
+setup-gh:
+    #!/usr/bin/env bash
+    echo "Checking GitHub CLI (gh)..."
+    if ! command -v gh > /dev/null; then
+        echo "GitHub CLI not found."
+        read -p "Would you like to install GitHub CLI? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if command -v brew > /dev/null; then
+                echo "Installing via Homebrew..."
+                brew install gh
+            else
+                echo "Homebrew not found. Please install 'gh' manually: https://cli.github.com/"
+                # Don't exit with error, just continue
+            fi
+        else
+            echo "Skipping GitHub CLI installation. Some features (like 'just report-issue') will be unavailable."
+            # Don't exit with error, just continue
+        fi
+    else
+        echo "✅ GitHub CLI is installed."
+    fi
+
+    # Check authentication if gh is installed
+    if command -v gh > /dev/null; then
+        if ! gh auth status >/dev/null 2>&1; then
+            echo "You are not logged into GitHub CLI."
+            read -p "Would you like to login now? (y/n) " -n 1 -r
+            echo ""
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                gh auth login
+            else
+                echo "Skipping login. You won't be able to use authenticated features."
+            fi
+        else
+            echo "✅ GitHub CLI is authenticated."
+        fi
+    fi
 
 # Setup AI context files
 [private]
