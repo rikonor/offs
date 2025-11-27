@@ -17,7 +17,7 @@ target/
 .*.swp
 
 # VS Code
-.vscode/
+# .vscode/
 
 # macOS
 .DS_Store
